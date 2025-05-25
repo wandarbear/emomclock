@@ -27,6 +27,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding-bottom: var(--banner-height); /* voorkomt overlap met footer ad */
 }
 
 main.centered {
@@ -99,7 +100,6 @@ h1 {
   background: var(--primary);
   color: #fff;
 }
-
 .btn-primary:hover {
   background: #4338ca;
   transform: translateY(-1px);
@@ -109,7 +109,6 @@ h1 {
   background: #e5e7eb;
   color: var(--text);
 }
-
 .btn-secondary:hover {
   background: #d1d5db;
   transform: translateY(-1px);
@@ -119,12 +118,10 @@ h1 {
 .display {
   text-align: center;
 }
-
 #timer {
   font-size: clamp(4rem, 10vw, 6rem);
   margin-bottom: 0.5rem;
 }
-
 #exercise {
   font-size: clamp(1.25rem, 3vw, 1.5rem);
   color: var(--muted);
@@ -137,7 +134,6 @@ h1 {
   max-width: 600px;
   margin-top: 2rem;
 }
-
 .faq-toggle {
   width: 100%;
   text-align: left;
@@ -150,22 +146,19 @@ h1 {
   cursor: pointer;
   transition: background var(--transition);
 }
-
 .faq-toggle:hover {
   background: #f0f0ff;
 }
-
 .faq-content {
   overflow: hidden;
   max-height: 0;
   transition: max-height var(--transition) ease;
+}
+.faq-content.open {
+  max-height: 200px; /* pas aan indien langer nodig */
+  margin-top: 0.5rem;
   padding: 0 0.75rem;
   border-left: 2px solid var(--primary);
-}
-
-.faq-content.open {
-  max-height: 200px; /* voldoende voor je tekst */
-  margin-top: 0.5rem;
 }
 
 /* Footer ad banner */
@@ -183,7 +176,7 @@ h1 {
   z-index: 10;
 }
 
-/* Desktop: faq naast timer */
+/* Layout FAQ naast timer op desktop */
 @media (min-width: 768px) {
   main.centered {
     flex-direction: row;
