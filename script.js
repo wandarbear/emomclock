@@ -1,204 +1,95 @@
-/* style.css */
-:root {
-  --primary: #4f46e5;
-  --background: #f3f4f6;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --banner-height: 60px;
-  --transition: 0.3s;
+// script.js
+const startBtn       = document.getElementById('startBtn');
+const stopBtn        = document.getElementById('stopBtn');
+const timerDisplay   = document.getElementById('timer');
+const exerciseDisplay= document.getElementById('exercise');
+let intervalId, duration, totalRounds, exercises = [];
+let genericMode=false, currentCycle=0, totalCycles=0, remaining;
+
+// Beep
+function beep() {
+  const ctx = new (window.AudioContext||window.webkitAudioContext)();
+  const osc = ctx.createOscillator();
+  osc.connect(ctx.destination);
+  osc.type='sine';
+  osc.frequency.value=1000;
+  osc.start();
+  setTimeout(()=>osc.stop(),200);
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+// Parse exercises
+function parseExercises(input) {
+  return input.trim().split('\n').filter(Boolean).map(line => {
+    const [name, desc] = line.split(':');
+    return { name: name.trim(), desc: desc?.trim() };
+  });
 }
 
-html, body {
-  height: 100%;
-  font-family: 'Inter', sans-serif;
-  background: var(--background);
-  color: var(--text);
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  padding-bottom: var(--banner-height); /* voorkomt overlap met footer ad */
-}
-
-main.centered {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  width: 100%;
-}
-
-.timer-area {
-  width: 100%;
-  max-width: 600px;
-}
-
-h1 {
-  font-size: clamp(2rem, 5vw, 4rem);
-  text-align: center;
-  margin-bottom: 1rem;
-  color: var(--primary);
-}
-
-/* Controls */
-.controls {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-.controls label {
-  font-weight: 600;
-}
-.controls input,
-.controls textarea {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 4px;
-  font-size: 1rem;
-  transition: border-color var(--transition);
-}
-.controls input:focus,
-.controls textarea:focus {
-  outline: none;
-  border-color: var(--primary);
-}
-
-/* Buttons */
-.buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-}
-.btn {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: background var(--transition), transform var(--transition);
-}
-.btn-primary {
-  background: var(--primary);
-  color: #fff;
-}
-.btn-primary:hover {
-  background: #4338ca;
-  transform: translateY(-1px);
-}
-.btn-secondary {
-  background: #e5e7eb;
-  color: var(--text);
-}
-.btn-secondary:hover {
-  background: #d1d5db;
-  transform: translateY(-1px);
-}
-
-/* Display */
-.display {
-  text-align: center;
-}
-#timer {
-  font-size: clamp(4rem, 10vw, 6rem);
-  margin-bottom: 0.5rem;
-}
-#exercise {
-  font-size: clamp(1.25rem, 3vw, 1.5rem);
-  color: var(--muted);
-  min-height: 2em;
-}
-
-/* FAQ */
-.faq {
-  width: 100%;
-  max-width: 600px;
-  margin-top: 2rem;
-}
-.faq-toggle {
-  position: relative;
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: transparent;
-  border: none;
-  padding: 0.75rem;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background var(--transition);
-}
-.faq-toggle:hover {
-  background: rgba(0,0,0,0.03);
-}
-.faq-toggle::after {
-  content: '▸';
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  transform: translateY(-50%);
-  transition: transform var(--transition);
-}
-.faq-toggle[aria-expanded="true"]::after {
-  transform: translateY(-50%) rotate(90deg);
-}
-.faq-content {
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transition: max-height var(--transition) ease, opacity var(--transition) ease;
-  margin: 0;
-}
-.faq-content.open {
-  max-height: 200px; /* pas aan indien meer nodig */
-  opacity: 1;
-  margin-top: 0.5rem;
-  padding-left: 1rem;
-  border-left: 2px solid var(--primary);
-}
-
-/* Footer ad banner */
-.ad-banner {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: var(--banner-height);
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-  z-index: 10;
-  overflow: hidden;
-}
-.ad-banner ins {
-  max-height: var(--banner-height);
-}
-
-/* Layout FAQ naast timer op desktop */
-@media (min-width: 768px) {
-  main.centered {
-    flex-direction: row;
-    align-items: flex-start;
-  }
-  .timer-area,
-  .faq {
-    flex: 1;
-  }
-  .faq {
-    margin-top: 0;
-    margin-left: 2rem;
+// Update timer & text
+function updateDisplay() {
+  const mins = String(Math.floor(remaining/60)).padStart(2,'0');
+  const secs = String(remaining%60).padStart(2,'0');
+  timerDisplay.textContent = `${mins}:${secs}`;
+  if (genericMode) {
+    exerciseDisplay.textContent = `Cycle ${currentCycle+1}/${totalCycles}`;
+  } else {
+    const round = Math.floor(currentCycle/exercises.length)+1;
+    const ex = exercises[currentCycle%exercises.length];
+    exerciseDisplay.innerHTML = ex
+      ? `<strong>Round ${round}/${totalRounds}:</strong> ${ex.name}${ex.desc? ` — <em>${ex.desc}</em>` : ''}`
+      : '';
   }
 }
+
+// Start
+function startTimer() {
+  duration    = parseInt(document.getElementById('interval').value,10) || 60;
+  exercises   = parseExercises(document.getElementById('exList').value);
+  totalRounds = parseInt(document.getElementById('rounds').value,10) || 1;
+  genericMode = exercises.length===0;
+  totalCycles = genericMode ? totalRounds : exercises.length*totalRounds;
+  currentCycle=0;
+  remaining   = duration;
+  updateDisplay();
+  startBtn.disabled=true;
+  stopBtn.disabled=false;
+  beep();
+
+  intervalId = setInterval(()=> {
+    remaining--;
+    if (remaining<0) {
+      currentCycle++;
+      if (currentCycle>=totalCycles) {
+        clearInterval(intervalId);
+        timerDisplay.textContent='00:00';
+        exerciseDisplay.textContent='Done! 👏';
+        startBtn.disabled=false;
+        stopBtn.disabled=true;
+        return;
+      }
+      remaining = duration;
+      beep();
+    }
+    updateDisplay();
+  }, 1000);
+}
+
+// Stop
+function stopTimer() {
+  clearInterval(intervalId);
+  timerDisplay.textContent='00:00';
+  exerciseDisplay.textContent='';
+  startBtn.disabled=false;
+  stopBtn.disabled=true;
+}
+
+startBtn.addEventListener('click', startTimer);
+stopBtn .addEventListener('click', stopTimer);
+
+// FAQ toggle
+const faqToggle  = document.querySelector('.faq-toggle');
+const faqContent = document.querySelector('.faq-content');
+faqToggle.addEventListener('click', () => {
+  const isOpen = faqContent.classList.toggle('open');
+  faqToggle.setAttribute('aria-expanded', isOpen);
+});
