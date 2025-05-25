@@ -8,9 +8,7 @@
   --transition: 0.3s;
 }
 
-*,
-*::before,
-*::after {
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -59,11 +57,9 @@ h1 {
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
-
 .controls label {
   font-weight: 600;
 }
-
 .controls input,
 .controls textarea {
   width: 100%;
@@ -73,7 +69,6 @@ h1 {
   font-size: 1rem;
   transition: border-color var(--transition);
 }
-
 .controls input:focus,
 .controls textarea:focus {
   outline: none;
@@ -86,7 +81,6 @@ h1 {
   gap: 1rem;
   justify-content: center;
 }
-
 .btn {
   padding: 0.75rem 1.5rem;
   border: none;
@@ -95,7 +89,6 @@ h1 {
   font-weight: 600;
   transition: background var(--transition), transform var(--transition);
 }
-
 .btn-primary {
   background: var(--primary);
   color: #fff;
@@ -104,7 +97,6 @@ h1 {
   background: #4338ca;
   transform: translateY(-1px);
 }
-
 .btn-secondary {
   background: #e5e7eb;
   color: var(--text);
@@ -135,11 +127,12 @@ h1 {
   margin-top: 2rem;
 }
 .faq-toggle {
+  position: relative;
+  display: block;
   width: 100%;
   text-align: left;
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 4px;
+  background: transparent;
+  border: none;
   padding: 0.75rem;
   font-size: 1rem;
   font-weight: 600;
@@ -147,17 +140,31 @@ h1 {
   transition: background var(--transition);
 }
 .faq-toggle:hover {
-  background: #f0f0ff;
+  background: rgba(0,0,0,0.03);
+}
+.faq-toggle::after {
+  content: '▸';
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: transform var(--transition);
+}
+.faq-toggle[aria-expanded="true"]::after {
+  transform: translateY(-50%) rotate(90deg);
 }
 .faq-content {
-  overflow: hidden;
   max-height: 0;
-  transition: max-height var(--transition) ease;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height var(--transition) ease, opacity var(--transition) ease;
+  margin: 0;
 }
 .faq-content.open {
-  max-height: 200px; /* pas aan indien langer nodig */
+  max-height: 200px; /* pas aan indien meer nodig */
+  opacity: 1;
   margin-top: 0.5rem;
-  padding: 0 0.75rem;
+  padding-left: 1rem;
   border-left: 2px solid var(--primary);
 }
 
@@ -174,6 +181,10 @@ h1 {
   justify-content: center;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
   z-index: 10;
+  overflow: hidden;
+}
+.ad-banner ins {
+  max-height: var(--banner-height);
 }
 
 /* Layout FAQ naast timer op desktop */
