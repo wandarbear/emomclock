@@ -1,3 +1,4 @@
+/* style.css */
 :root {
   --primary: #4f46e5;
   --background: #f3f4f6;
@@ -7,7 +8,9 @@
   --transition: 0.3s;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -24,37 +27,39 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  margin: 0;
 }
 
-/* Main content spans full width and centers inner controls */
 main.centered {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1rem;
   width: 100%;
+}
+
+.timer-area {
+  width: 100%;
+  max-width: 600px;
 }
 
 h1 {
   font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: 700;
+  text-align: center;
   margin-bottom: 1rem;
   color: var(--primary);
 }
 
+/* Controls */
 .controls {
-  width: 100%;
-  max-width: 600px;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .controls label {
-  font-size: 1rem;
   font-weight: 600;
 }
 
@@ -74,11 +79,11 @@ h1 {
   border-color: var(--primary);
 }
 
+/* Buttons */
 .buttons {
   display: flex;
   gap: 1rem;
   justify-content: center;
-  margin-top: 1rem;
 }
 
 .btn {
@@ -86,7 +91,6 @@ h1 {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 1rem;
   font-weight: 600;
   transition: background var(--transition), transform var(--transition);
 }
@@ -111,21 +115,57 @@ h1 {
   transform: translateY(-1px);
 }
 
+/* Display */
 .display {
-  margin-top: 2rem;
   text-align: center;
 }
 
 #timer {
   font-size: clamp(4rem, 10vw, 6rem);
-  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
 #exercise {
-  margin-top: 0.5rem;
   font-size: clamp(1.25rem, 3vw, 1.5rem);
   color: var(--muted);
   min-height: 2em;
+}
+
+/* FAQ */
+.faq {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 2rem;
+}
+
+.faq-toggle {
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 4px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.faq-toggle:hover {
+  background: #f0f0ff;
+}
+
+.faq-content {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height var(--transition) ease;
+  padding: 0 0.75rem;
+  border-left: 2px solid var(--primary);
+}
+
+.faq-content.open {
+  max-height: 200px; /* voldoende voor je tekst */
+  margin-top: 0.5rem;
 }
 
 /* Footer ad banner */
@@ -141,4 +181,20 @@ h1 {
   justify-content: center;
   box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
   z-index: 10;
+}
+
+/* Desktop: faq naast timer */
+@media (min-width: 768px) {
+  main.centered {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .timer-area,
+  .faq {
+    flex: 1;
+  }
+  .faq {
+    margin-top: 0;
+    margin-left: 2rem;
+  }
 }
