@@ -1,9 +1,15 @@
 // script.js
+
+// Timer elements
 const startBtn = document.getElementById('startBtn');
 const stopBtn  = document.getElementById('stopBtn');
 const timerDisplay   = document.getElementById('timer');
 const exerciseDisplay= document.getElementById('exercise');
 
+// FAQ elements\const faqToggle  = document.querySelector('.faq-toggle');
+const faqContent = document.querySelector('.faq-content');
+
+// Timer state
 let intervalId;
 let duration, totalRounds, exercises = [];
 let genericMode = false;
@@ -11,6 +17,7 @@ let currentCycle = 0;
 let totalCycles  = 0;
 let remaining;
 
+// Beep sound function
 function beep() {
   const ctx = new (window.AudioContext || window.webkitAudioContext)();
   const osc = ctx.createOscillator();
@@ -21,6 +28,7 @@ function beep() {
   setTimeout(() => osc.stop(), 200);
 }
 
+// Parse exercises from textarea input
 function parseExercises(input) {
   return input
     .trim()
@@ -32,6 +40,7 @@ function parseExercises(input) {
     });
 }
 
+// Update timer and exercise display
 function updateDisplay() {
   const mins = String(Math.floor(remaining / 60)).padStart(2, '0');
   const secs = String(remaining % 60).padStart(2, '0');
@@ -48,6 +57,7 @@ function updateDisplay() {
   }
 }
 
+// Start the EMOM timer
 function startTimer() {
   duration     = parseInt(document.getElementById('interval').value, 10) || 60;
   exercises    = parseExercises(document.getElementById('exList').value);
@@ -81,6 +91,7 @@ function startTimer() {
   }, 1000);
 }
 
+// Stop the timer
 function stopTimer() {
   clearInterval(intervalId);
   timerDisplay.textContent = '00:00';
@@ -89,5 +100,12 @@ function stopTimer() {
   stopBtn.disabled  = true;
 }
 
+// Toggle FAQ section
+faqToggle.addEventListener('click', () => {
+  const isOpen = faqContent.classList.toggle('open');
+  faqToggle.setAttribute('aria-expanded', isOpen);
+});
+
+// Event listeners
 startBtn.addEventListener('click', startTimer);
 stopBtn .addEventListener('click', stopTimer);
