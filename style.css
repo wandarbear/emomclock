@@ -6,6 +6,13 @@
   --muted: #6b7280;
   --banner-height: 60px;
   --transition: 0.3s;
+  --timer-max-width: 600px;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --banner-height: 50px;
+  }
 }
 
 *, *::before, *::after {
