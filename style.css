@@ -1,16 +1,17 @@
 /* style.css */
+
 :root {
   --primary: #4f46e5;
   --background: #f3f4f6;
-  --card: #fff;
+  --card: #ffffff;
   --text: #1f2937;
   --muted: #6b7280;
   --radius: 12px;
   --transition: 0.3s;
-  --sidebar-width: 120px;
   --banner-height: 60px;
 }
 
+/* Reset & base */
 *,
 *::before,
 *::after {
@@ -22,30 +23,25 @@
 html {
   font-family: 'Inter', sans-serif;
   font-size: 16px;
+  height: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--text);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-bottom: var(--banner-height);
+  background: var(--background);
+  color: var(--text);
+  margin: 0;
 }
 
-.layout {
-  display: flex;
+/* Centered main content */
+main.centered {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-}
-
-.ad-side {
-  display: none;
-}
-
-main {
   background: var(--card);
   border-radius: var(--radius);
   box-shadow: 0 4px 20px rgba(0,0,0,0.05);
@@ -53,23 +49,9 @@ main {
   width: 100%;
   max-width: clamp(300px, 90%, 600px);
   text-align: center;
-  transition: var(--transition);
 }
 
-main.centered {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-
-main:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-}
-
+/* Heading */
 h1 {
   font-size: clamp(1.75rem, 6vw, 3rem);
   font-weight: 700;
@@ -77,10 +59,11 @@ h1 {
   color: var(--primary);
 }
 
+/* Form controls */
 .controls label {
   display: block;
   text-align: left;
-  margin-bottom: .25rem;
+  margin-bottom: 0.25rem;
   font-weight: 600;
   font-size: clamp(1rem, 2.5vw, 1.125rem);
 }
@@ -90,7 +73,7 @@ h1 {
   width: 100%;
   border: 1px solid #e5e7eb;
   border-radius: var(--radius);
-  padding: .75rem;
+  padding: 0.75rem;
   font-size: clamp(1rem, 2.5vw, 1.125rem);
   margin-bottom: 1rem;
   transition: border-color var(--transition);
@@ -102,82 +85,12 @@ h1 {
   border-color: var(--primary);
 }
 
+/* Buttons */
 .buttons {
   margin-bottom: 1rem;
 }
 
 .btn {
-  padding: .75rem 1.5rem;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: background var(--transition), transform var(--transition);
-  margin: .25rem;
-  font-weight: 600;
-}
-
-.btn-primary {
-  background: var(--primary);
-  color: #fff;
-}
-
-.btn-primary:hover {
-  background: #4338ca;
-  transform: translateY(-2px);
-}
-
-.btn-secondary {
-  background: #e5e7eb;
-  color: var(--text);
-}
-
-.btn-secondary:hover {
-  background: #d1d5db;
-  transform: translateY(-2px);
-}
-
-.display {
-  margin-top: 1rem;
-}
-
-#timer {
-  font-size: clamp(3.5rem, 10vw, 6rem);
-  font-weight: 600;
-}
-
-#exercise {
-  font-size: clamp(1.25rem, 3vw, 1.5rem);
-  color: var(--muted);
-  min-height: 2em;
-}
-
-.ad-banner {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: var(--banner-height);
-  background: var(--card);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-  z-index: 10;
-}
-
-@media (min-width: 1024px) {
-  .ad-side {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: var(--sidebar-width);
-  }
-  .layout {
-    justify-content: space-between;
-    padding: 2rem;
-  }
-  main {
-    max-width: clamp(400px, 50%, 800px);
-  }
-}
+  bord
